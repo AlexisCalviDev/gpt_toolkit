@@ -8,7 +8,7 @@ from rich.console import Console
 from rich.table import Table
 from typing import Optional, Dict, Any
 
-from json_schema_builder import JSONSchemaBuilder
+from gpt_tookit.json_schema_builder import JSONSchemaBuilder
 
 class GPTInterface:
 
