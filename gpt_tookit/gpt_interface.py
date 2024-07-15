@@ -1,5 +1,5 @@
 import json
-from openai import OpenAI
+import openai
 import requests
 import os
 from rich import print
@@ -13,7 +13,7 @@ from json_schema_builder import JSONSchemaBuilder
 class GPTInterface:
 
     def __init__(self, api_key: str):
-        self.open_client = OpenAI(api_key=api_key)
+        openai.api_key = api_key
         self.console = Console()
 
     def from_prompt_to_gpt_json(
@@ -40,15 +40,13 @@ class GPTInterface:
         self.console.print(Panel.fit(f"Envoi de la requête à {gpt_version}", style="bold blue"))
 
         try:
-            completions = self.open_client.chat.completions.create(
+            completions = openai.ChatCompletion.create(
                 model=gpt_version,
-                response_format={"type": "json_object"},
                 messages=messages,
                 temperature=temperature
             )
 
-            completions_json = json.loads(completions.model_dump_json())
-            response_content = json.loads(completions_json["choices"][0]['message']['content'])
+            response_content = json.loads(completions.choices[0].message['content'])
 
             self.console.print(Panel.fit("Réponse reçue et parsée avec succès", style="bold green"))
 
@@ -87,15 +85,15 @@ class GPTInterface:
         self.console.print(Panel.fit("Préparation de la requête DALL-E", style="bold magenta"))
 
         try:
-            response = self.open_client.images.generate(
+            response = openai.Image.create(
                 model=model,
                 prompt=prompt,
                 size=size,
                 quality=quality,
-                n=1,
+                n=1
             )
 
-            image_url = response.data[0].url
+            image_url = response['data'][0]['url']
             self.console.print(Panel.fit("Image générée avec succès", style="bold green"))
             self.console.print(f"URL de l'image : [link={image_url}]{image_url}[/link]")
 
