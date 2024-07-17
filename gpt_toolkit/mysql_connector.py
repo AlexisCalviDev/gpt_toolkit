@@ -2,6 +2,7 @@ import pymysql
 import pandas as pd
 from sqlalchemy import create_engine
 import json
+from urllib.parse import quote_plus
 class MySQLConnector:
 
     def __init__(self,
@@ -57,9 +58,10 @@ class MySQLConnector:
         df.to_sql(name=table_name, con=engine, if_exists=if_exists, index=False)
         print(f"DataFrame is written to MySQL table '{table_name}' successfully.")
 
-    def json_to_mysql(self, json, table_name, if_exists='append'):
-        df = self.json_to_df(json)
-        conn_str = f'mysql+pymysql://{self.conn.user}:{self.conn.password}@{self.sql_hostname}:{self.sql_port}/{self.conn.db}'
+    def json_to_mysql(self, json_data, table_name, if_exists='append'):
+        df = self.json_to_df(json_data)
+        conn_str = f'mysql+pymysql://{self.sql_username}:{quote_plus(self.sql_password)}@{self.sql_hostname}:{self.sql_port}/{self.sql_database}'
+        print(f"Connecting to: mysql+pymysql://{self.sql_username}:****@{self.sql_hostname}:{self.sql_port}/{self.sql_database}")
         engine = create_engine(conn_str)
         df.to_sql(name=table_name, con=engine, if_exists=if_exists, index=False)
         print(f"JSON is written to MySQL table '{table_name}' successfully.")
