@@ -28,12 +28,6 @@ class MySQLConnector:
         print(f"Connecting to: mysql+pymysql://{self.sql_username}:****@{self.sql_hostname}:{self.sql_port}/{self.sql_database}")
         self.engine = create_engine(conn_str)
 
-    def query_to_dataframe(self, query):
-        with self.engine.connect() as connection:
-            data = pd.read_sql_query(query, connection)
-        return data
-
-
     def json_to_df(self, json_data):
         # Si json_data est une chaîne JSON, on la convertit en dictionnaire
         if isinstance(json_data, str):
@@ -59,3 +53,17 @@ class MySQLConnector:
         df = self.json_to_df(json_data)
         df.to_sql(name=table_name, con=self.engine, if_exists=if_exists, index=False)
         print(f"JSON is written to MySQL table '{table_name}' successfully.")
+
+    def df_to_json(self, df):
+        json_data = df.to_json(orient='records')
+        return json.loads(json_data)
+
+    def query_to_dataframe(self, query):
+        with self.engine.connect() as connection:
+            df = pd.read_sql_query(query, connection)
+        return df
+
+    def query_to_json(self, query):
+        with self.engine.connect() as connection:
+            df = pd.read_sql_query(query, connection)
+        return self.df_to_json(df)
