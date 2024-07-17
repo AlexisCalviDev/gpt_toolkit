@@ -67,3 +67,8 @@ class MySQLConnector:
         with self.engine.connect() as connection:
             df = pd.read_sql_query(query, connection)
         return self.df_to_json(df)
+
+    def add_id_to_json(self, data, name, value):
+        for item in data:
+            item[name] = value
+        return data
