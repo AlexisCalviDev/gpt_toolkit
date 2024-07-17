@@ -50,7 +50,10 @@ class MySQLConnector:
         print(f"DataFrame is written to MySQL table '{table_name}' successfully.")
 
     def json_to_mysql(self, json_data, table_name, if_exists='append'):
-        df = self.json_to_df(json_data)
+        if isinstance(json_data, list):
+            df = pd.DataFrame(json_data)
+        else:
+            df = pd.DataFrame([json_data])
         df.to_sql(name=table_name, con=self.engine, if_exists=if_exists, index=False)
         print(f"JSON is written to MySQL table '{table_name}' successfully.")
 
