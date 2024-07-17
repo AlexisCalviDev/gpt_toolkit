@@ -16,8 +16,6 @@ class MySQLConnector:
         self.sql_username = sql_username
         self.sql_password = sql_password
         self.sql_database = sql_database
-
-    def connect(self):
         self.conn = pymysql.connect(
             host=self.sql_hostname,
             user=self.sql_username,
@@ -26,7 +24,6 @@ class MySQLConnector:
             database=self.sql_database
         )
         print("Connected to MySQL database")
-        return self.conn
 
     def disconnect(self):
         if hasattr(self, 'conn'):

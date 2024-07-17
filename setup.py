@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='gpt_toolkit',
-    version='0.0.7',
+    version='0.0.8',
     packages=find_packages(),
     install_requires=[
         'openai==0.27.8',
